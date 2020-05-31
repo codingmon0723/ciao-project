@@ -13,5 +13,14 @@ public class TestCamreaController : MonoBehaviour {
 		Vector3 direction = new Vector3(h, v).normalized;
 
 		transform.Translate(direction * speed * Time.deltaTime);
+
+		if (Input.GetKey(KeyCode.Space))
+		{
+			speed += 5f;
+		}
+		else
+		{
+			speed = 10f;
+		}
 	}
 }
