@@ -14,7 +14,6 @@ public class SplitObject : MonoBehaviour {
 	public WreckObject[] wrecks;
 	Rigidbody2D[] rigid_wrecks;
 	GameObject[] obj_wrecks;
-	Vector3[] globalExpPoints;
 
 	public bool split;
 
@@ -22,14 +21,15 @@ public class SplitObject : MonoBehaviour {
 	{
 		rigid_wrecks = new Rigidbody2D[wrecks.Length];
 		obj_wrecks = new GameObject[wrecks.Length];
-		globalExpPoints = new Vector3[wrecks.Length];
+	}
 
+	void Start()
+	{
 		for (int i = 0; i < wrecks.Length; i++)
 		{
 			obj_wrecks[i] = Instantiate(wrecks[i].wreck);
 			obj_wrecks[i].SetActive(false);
 			rigid_wrecks[i] = obj_wrecks[i].GetComponent<Rigidbody2D>();
-			globalExpPoints[i] = wrecks[i].expPoint + transform.position;
 		}
 	}
 
@@ -40,7 +40,7 @@ public class SplitObject : MonoBehaviour {
 			for (int i = 0; i < wrecks.Length; i++)
 			{
 				obj_wrecks[i].SetActive(true);
-				obj_wrecks[i].transform.position = globalExpPoints[i];
+				obj_wrecks[i].transform.position = transform.position + wrecks[i].expPoint;
 
 				float randomX = Random.Range(-2f, 2f);
 				float randomY = Random.Range(1f, 2f);
@@ -55,14 +55,17 @@ public class SplitObject : MonoBehaviour {
 
 	void OnDrawGizmos()
 	{
-		float size = 0.05f;
-
-		Gizmos.color = Color.red;
-		for (int i = 0; i < wrecks.Length; i++)	
+		if (wrecks != null)
 		{
-			Vector3 globalExpPoint = (Application.isPlaying) ? globalExpPoints[i] : transform.position + wrecks[i].expPoint;
-			Gizmos.DrawLine(globalExpPoint + Vector3.left * size, globalExpPoint + Vector3.right * size);
-			Gizmos.DrawLine(globalExpPoint + Vector3.up * size, globalExpPoint + Vector3.down * size);
+			float size = 0.05f;
+
+			Gizmos.color = Color.red;
+			for (int i = 0; i < wrecks.Length; i++)
+			{
+				Vector3 localExpPoint = transform.position + wrecks[i].expPoint;
+				Gizmos.DrawLine(localExpPoint + Vector3.left * size, localExpPoint + Vector3.right * size);
+				Gizmos.DrawLine(localExpPoint + Vector3.up * size, localExpPoint + Vector3.down * size);
+			}
 		}
 	}
 }
