@@ -16,7 +16,7 @@ public class TestCamreaController : MonoBehaviour {
 
 		if (Input.GetKey(KeyCode.Space))
 		{
-			speed += 5f;
+			speed = 20f;
 		}
 		else
 		{
